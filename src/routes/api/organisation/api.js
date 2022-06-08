@@ -98,24 +98,27 @@ router.get(`/`, async function listOrganisations(req, res, next) {
 /**
  * List own organisation
  */
-router.get(`/me`, [
-  async function listOwnOrganisation(req, res, next) {
-    try {
-      const organisation =
-        (await db.Organisation.findByPk(req.user.organisationId, {
-          include: [db.Tag],
-        })) || {};
+router.get(
+  `/me`,
+  [
+    async function listOwnOrganisation(req, res, next) {
+      try {
+        const organisation =
+          (await db.Organisation.findByPk(req.user.organisationId, {
+            include: [db.Tag],
+          })) || {};
 
-      req.results = organisation;
-      return next();
-    } catch (err) {
-      return next(createError(500, err.message));
-    }
-  },
-  auth.can('Organisation', 'view'),
-  auth.useReqUser,
-  (req, res) => res.json(req.results),
-]);
+        req.results = organisation;
+        return next();
+      } catch (err) {
+        return next(createError(500, err.message));
+      }
+    },
+    auth.can('Organisation', 'view'),
+    auth.useReqUser,
+  ],
+  (req, res) => res.json(req.results)
+);
 
 /**
  * Get organisation by id
