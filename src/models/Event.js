@@ -34,12 +34,12 @@ module.exports = function (db, sequelize, DataTypes) {
 
       minAge: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
       },
 
       maxAge: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
       },
 
       // Price is in cents
