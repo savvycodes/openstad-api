@@ -132,7 +132,7 @@ module.exports = function (db, sequelize, DataTypes) {
       // Municipality contact details
       municipalityContactName: {
         type: DataTypes.STRING(255),
-        allowNull: false,
+        allowNull: true,
         auth: {
           listableBy: ['editor', 'owner'],
           viewableBy: ['editor', 'owner'],
