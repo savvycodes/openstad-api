@@ -57,4 +57,10 @@ exports.updateOrganisation = Joi.object({
       /https?:\/\/(www\.)?instagram\.com\/([A-Za-z0-9_](?:(?:[A-Za-z0-9_]|(?:\.(?!\.))){0,28}(?:[A-Za-z0-9_]))?)/
     ),
   tagIds: Joi.array().items(Joi.number()),
+
+  // Contact details
+  contactName: Joi.string(),
+  contactPosition: Joi.string(),
+  contactEmail: Joi.string().email(),
+  contactPhone: Joi.string().max(10).trim(),
 }).options({ stripUnknown: true });

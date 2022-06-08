@@ -4,6 +4,7 @@ const createError = require('http-errors');
 // const config = require('config');
 const log = require('debug')('app:api-organisation');
 
+const auth = require('../../../lib/sequelize-authorization/middleware')
 const db = require('../../../db');
 const validateSchema = require('../../../middleware/validate-schema');
 const canCreateOrganisation = require('./policies/can-create-organisation');
@@ -97,18 +98,24 @@ router.get(`/`, async function listOrganisations(req, res, next) {
 /**
  * List own organisation
  */
-router.get(`/me`, async function listOwnOrganisation(req, res, next) {
-  try {
-    const organisation =
-      (await db.Organisation.findByPk(req.user.organisationId, {
-        include: [db.Tag],
-      })) || {};
+router.get(`/me`, [
+  async function listOwnOrganisation(req, res, next) {
+    try {
+      const organisation =
+        (await db.Organisation.findByPk(req.user.organisationId, {
+          include: [db.Tag],
+        })) || {};
 
-    return res.json(organisation);
-  } catch (err) {
-    return next(createError(500, err.message));
-  }
-});
+      req.results = organisation;
+      return next();
+    } catch (err) {
+      return next(createError(500, err.message));
+    }
+  },
+  auth.can('Organisation', 'view'),
+  auth.useReqUser,
+  (req, res) => res.json(req.results),
+]);
 
 /**
  * Get organisation by id
