@@ -77,6 +77,10 @@ module.exports = function (db, sequelize, DataTypes) {
     this.belongsToMany(models.Tag, {
       through: 'eventTag',
     });
+    this.belongsToMany(models.Tag, {
+      as: 'filterTags',
+      through: 'eventTag',
+    });
     this.belongsToMany(models.User, {
       through: 'eventUserFavorites',
     });

@@ -65,7 +65,10 @@ exports.queryEvents = Joi.object({
   organisationId: Joi.number(),
   q: Joi.string().allow(null, ''),
   dates: Joi.alternatives().try(Joi.array().items(Joi.date()), Joi.date()),
-  tagIds: Joi.alternatives().try(Joi.array().items(Joi.number()), Joi.number()),
+  tagIds: Joi.alternatives().try(
+    Joi.array().items(Joi.number(), Joi.array().items(Joi.number())),
+    Joi.number()
+  ),
   districts: Joi.alternatives().try(
     Joi.array().items(Joi.string()),
     Joi.string()

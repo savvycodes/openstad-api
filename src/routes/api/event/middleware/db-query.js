@@ -1,11 +1,23 @@
+const createError = require('http-errors');
 const { Op, fn } = require('sequelize');
 const moment = require('moment');
+const Joi = require('joi');
+const _ = require('lodash');
+const log = require('debug')('app:event-middleware/db-query');
 
 const db = require('../../../../db');
 const schemas = require('../schemas');
 
 module.exports = async function (req, res, next) {
   try {
+    // TODO: Fix this parsing
+    if (req.query.tagIds) {
+      if (Array.isArray(req.query.tagIds)) {
+        req.query.tagIds = req.query.tagIds.map(tags => JSON.parse(tags))
+      } else {
+        req.query.tagIds = JSON.parse(req.query.tagIds)
+      }
+    }
     req.query = await schemas.queryEvents.validateAsync(req.query);
 
     // @todo: implement pagination without offset: https://use-the-index-luke.com/sql/partial-results/fetch-next-page
@@ -13,7 +25,7 @@ module.exports = async function (req, res, next) {
       where: {
         siteId: req.params.siteId,
       },
-      include: [db.Organisation],
+      include: [db.Organisation, db.Tag],
       subQuery: false,
       // Disabled limit for now because it remove results
       // limit: 60,
@@ -43,13 +55,25 @@ module.exports = async function (req, res, next) {
     }
 
     if (req.query.tagIds) {
-      query.include.push({
-        model: db.Tag,
-        where: { id: [].concat(req.query.tagIds) },
-        required: true,
-      });
-    } else {
-      query.include.push(db.Tag);
+      // Add an extra join which can be used to filter. This will still fetch all associated tags.
+      query.include.push({ model: db.Tag, as: 'filterTags' });
+
+      // Use 'or' query to filter on multiple groups of tags
+      if (Array.isArray(req.query.tagIds[0])) {
+        const and = req.query.tagIds.map((tags) => ({
+            '$filterTags.id$': [].concat(tags),
+          })
+        );
+
+        if (query.where[Op.or]) {
+          query.where[Op.or].push(and);
+        } else {
+          query.where[Op.or] = and;
+        }
+      } else {
+        // For a simple array of tag ids and backwards compat
+        query.where['$filterTags.id$'] = [].concat(req.query.tagIds);
+      }
     }
 
     if (req.query.dates) {
@@ -104,6 +128,13 @@ module.exports = async function (req, res, next) {
 
     return next();
   } catch (err) {
+    if (Joi.isError(err)) {
+      const errorDetails = err.details.map((e) => e.message).join(', ');
+      log(`${err.message}: %O`);
+      return next(createError(400, errorDetails));
+    }
+
+    log(`${err.message}: %O`);
     next(err);
   }
 };
