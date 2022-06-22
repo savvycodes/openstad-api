@@ -7,7 +7,9 @@ const createError = require('http-errors');
  * @returns
  */
 module.exports = async function isEventProvider(user, site) {
-  const hasPermission = user.role === 'admin' || user.isEventProvider;
+  const hasPermission =
+    ['admin', 'moderator', 'editor'].includes(user.role) ||
+    user.isEventProvider;
   if (!hasPermission) {
     throw createError(403, 'Je bent geen aanbieder');
   }
