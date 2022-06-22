@@ -72,7 +72,7 @@ router.post(
 router.get(
   '/',
   [
-    cache('1 hour', (req) => req.headers['cache-control'] !== 'no-cache'),
+    cache('1 min', (req) => req.headers['cache-control'] !== 'no-cache'),
     dbQuery,
   ],
   async function listEvents(req, res, next) {
