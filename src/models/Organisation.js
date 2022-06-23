@@ -33,12 +33,12 @@ module.exports = function (db, sequelize, DataTypes) {
 
       phone: {
         type: DataTypes.STRING(10),
-        allowNull: false,
+        allowNull: true,
       },
 
       email: {
         type: DataTypes.STRING(255),
-        allowNull: false,
+        allowNull: true,
         validate: {
           isEmail: {
             msg: 'Geen geldig emailadres',
@@ -132,7 +132,7 @@ module.exports = function (db, sequelize, DataTypes) {
       // Municipality contact details
       municipalityContactName: {
         type: DataTypes.STRING(255),
-        allowNull: false,
+        allowNull: true,
         auth: {
           listableBy: ['editor', 'owner'],
           viewableBy: ['editor', 'owner'],

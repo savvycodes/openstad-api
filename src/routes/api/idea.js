@@ -473,7 +473,7 @@ router
 
     ideaInstance.setTags(req.tags).then((result) => {
       // refetch. now with tags
-      let scope = [...req.scope, 'includeTags'];
+      let scope = [...req.scope, 'includeTags', 'includeSite'];
       if (req.canIncludeVoteCount) scope.push('includeVoteCount');
       return db.Idea.scope(...scope)
         .findOne({

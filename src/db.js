@@ -58,7 +58,6 @@ var sequelize = new Sequelize(
     },
     timeZone: config.timeZone,
     logging: require('debug')('app:db:query'),
-    // logging				 : console.log,
     typeValidation: true,
 
     define: {

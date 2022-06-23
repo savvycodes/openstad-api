@@ -13,8 +13,8 @@ exports.createEvent = Joi.object({
       .required(),
   }),
   district: Joi.string().required(),
-  minAge: Joi.number().required(),
-  maxAge: Joi.number().required(),
+  minAge: Joi.number().allow('', null),
+  maxAge: Joi.number().allow('', null),
   price: Joi.string().required(),
   attendees: Joi.number().required(),
   information: Joi.string().allow('', null),
@@ -42,8 +42,8 @@ exports.patchEvent = Joi.object({
     ),
   }),
   district: Joi.string(),
-  minAge: Joi.number(),
-  maxAge: Joi.number(),
+  minAge: Joi.number().allow('', null),
+  maxAge: Joi.number().allow('', null),
   price: Joi.string(),
   attendees: Joi.number(),
   information: Joi.string().allow('', null),
@@ -65,7 +65,10 @@ exports.queryEvents = Joi.object({
   organisationId: Joi.number(),
   q: Joi.string().allow(null, ''),
   dates: Joi.alternatives().try(Joi.array().items(Joi.date()), Joi.date()),
-  tagIds: Joi.alternatives().try(Joi.array().items(Joi.number()), Joi.number()),
+  tagIds: Joi.alternatives().try(
+    Joi.array().items(Joi.number(), Joi.array().items(Joi.number())),
+    Joi.number()
+  ),
   districts: Joi.alternatives().try(
     Joi.array().items(Joi.string()),
     Joi.string()

@@ -34,12 +34,12 @@ module.exports = function (db, sequelize, DataTypes) {
 
       minAge: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
       },
 
       maxAge: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
       },
 
       // Price is in cents
@@ -75,6 +75,10 @@ module.exports = function (db, sequelize, DataTypes) {
     this.belongsTo(models.Site);
     this.belongsTo(models.Organisation, {});
     this.belongsToMany(models.Tag, {
+      through: 'eventTag',
+    });
+    this.belongsToMany(models.Tag, {
+      as: 'filterTags',
       through: 'eventTag',
     });
     this.belongsToMany(models.User, {
