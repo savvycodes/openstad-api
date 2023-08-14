@@ -540,6 +540,7 @@ router
         if (req.query.includePoll) {
           if (found.poll) found.poll.countVotes(!req.query.withVotes);
         }
+        found.site = req.site;
         req.results = found;
         next();
       })

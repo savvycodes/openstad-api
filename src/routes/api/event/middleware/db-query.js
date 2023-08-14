@@ -108,7 +108,7 @@ module.exports = async function (req, res, next) {
         as: 'slots',
         required: true,
         where: {
-          startTime: {
+          endTime: {
             [Op.gte]: moment().startOf('day').toDate(),
           },
         },
