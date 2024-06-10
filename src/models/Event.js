@@ -1,4 +1,3 @@
-const { set } = require('apicache-plus');
 const config = require('config');
 const log = require('debug')('app:event');
 
