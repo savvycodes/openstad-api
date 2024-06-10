@@ -80,7 +80,10 @@ router.get(
       const query = res.locals.query;
 
       const count = await db.Event.count({ ...query, distinct: true });
-      const events = await db.Event.findAll(query);
+      const events = await db.Event.findAll({
+        ...query,       
+        order: [['highlighted', 'DESC']],
+    });
 
       return res.json({
         metadata: {
@@ -116,7 +119,7 @@ router.get('/:eventId(\\d+)', async function getEvent(req, res, next) {
         db.Organisation,
         db.Tag,
       ],
-    });
+    }); 
 
     if (!event) {
       throw createError(404, 'Geen event gevonden');
@@ -144,7 +147,6 @@ router.patch(
     const transaction = res.locals.transaction;
     try {
       const values = req.body;
-
       const event = res.locals.event;
 
       // Create, update or remove slots
