@@ -82,8 +82,7 @@ router.get(
       const count = await db.Event.count({ ...query, distinct: true });
       const events = await db.Event.findAll({
         ...query,       
-        order: [['highlighted', 'DESC']],
-    });
+      });
 
       return res.json({
         metadata: {
