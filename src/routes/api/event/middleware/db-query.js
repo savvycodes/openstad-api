@@ -32,6 +32,7 @@ module.exports = async function (req, res, next) {
       // logging: console.log,
       // offset: (req.query.page - 1) * 60,
       order: [
+        ['highlighted', 'DESC'],
         [{ model: db.EventTimeslot, as: 'slots' }, 'startTime', 'ASC'],
         ['name', 'ASC'],
       ],

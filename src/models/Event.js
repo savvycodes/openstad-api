@@ -61,9 +61,16 @@ module.exports = function (db, sequelize, DataTypes) {
         type: DataTypes.STRING(2048),
         allowNull: false,
       },
-    },
+
+      highlighted: {
+        type         : DataTypes.BOOLEAN,
+        allowNull    : false,
+        defaultValue : false,
+        },
+      },
+
     {
-      charset: 'utf8'
+      charset: 'utf8',
     }
   );
 

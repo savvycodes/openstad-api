@@ -58,6 +58,7 @@ exports.patchEvent = Joi.object({
     )
     .min(1),
   tagIds: Joi.array().items(Joi.number()).min(1),
+  highlighted:Joi.boolean().default(false)
 }).options({ stripUnknown: true });
 
 exports.queryEvents = Joi.object({
